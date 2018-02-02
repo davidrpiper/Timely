@@ -11,24 +11,33 @@
 import Foundation
 
 public struct Timely: TimelyTimer {
-    private static var reportFunction: (String, Double) -> () = {_, _ in }
+    private static var reportFunction: ((String, Double) -> ())?
 
     public static func setReportFunction(_ function: @escaping (String, Double) -> ()) {
         reportFunction = function
     }
-
-    public static func time(_ name: String, _ closure: () -> ()) {
-        let start = Date()
-        closure()
-        let diff: Double = start.timeIntervalSinceNow * -1
-        reportFunction(name, diff)
+    
+    public static func noop() {
+        reportFunction = nil
     }
 
     public static func time<T>(_ name: String, _ closure: () -> T) -> T {
+        if let report = reportFunction {
+            let start = Date()
+            let ret = closure()
+            let diff: Double = start.timeIntervalSinceNow * -1
+            report(name, diff)
+            return ret
+        }
+        
+        return closure()
+    }
+    
+    public static func time<T>(_ name: String, withReportFunction report: (String, Double) -> (), _ closure: () -> T) -> T {
         let start = Date()
         let ret = closure()
         let diff: Double = start.timeIntervalSinceNow * -1
-        reportFunction(name, diff)
+        report(name, diff)
         return ret
     }
 }
