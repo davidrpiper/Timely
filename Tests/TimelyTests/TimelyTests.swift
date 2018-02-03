@@ -129,33 +129,33 @@ class TimelyTests: XCTestCase {
 
         // -- No reporting -- //
         Timely.noop()
-        
+
         Timely.time("Timer", funcVoidReturn)
         XCTAssertEqual(globalCounter, 0)
-        
+
         let oneHundredAFourthTime = Timely.time("Timer", funcWithReturn)
         XCTAssertEqual(Int(100), oneHundredAFourthTime)
         XCTAssertEqual(globalCounter, 0)
     }
-    
+
     func testProvidedReportFunction() {
         Timely.time("Timer", withReportFunction: {_, _ in globalCounter += 1}, funcVoidReturn)
         XCTAssertEqual(globalCounter, 1)
-        
+
         let oneHundred = Timely.time("Timer", withReportFunction: {_, _ in globalCounter += 1}, funcWithReturn)
         XCTAssertEqual(Int(100), oneHundred)
         XCTAssertEqual(globalCounter, 2)
-        
+
         // Check that we can still go back to the usual calling conventions
         // after specifying a one-off reporting function
-        
+
         Timely.time("Timer", funcVoidReturn)
         XCTAssertEqual(globalCounter, 2)
-        
+
         Timely.setReportFunction(timerCallbackSubtractingOne)
         Timely.time("Timer", funcVoidReturn)
         XCTAssertEqual(globalCounter, 1)
-        
+
         Timely.noop()
         let oneHundredAgain = Timely.time("Timer", funcWithReturn)
         XCTAssertEqual(Int(100), oneHundredAgain)
