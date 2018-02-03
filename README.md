@@ -5,22 +5,22 @@ A tiny timing library for Swift. Timely allows you to easily time the execution 
 ## Usage
 
 ```swift
-Timely.time("doSomething timer") { doSomething() }
+Timely.time("Timer 1") { doSomething() }
 
-let answer: Int = Timely.time("calculation timer") { calculateSomethingWithInts(1, 2) }
+let answer: Int = Timely.time("Timer 2") { calculateSomethingWithInts(1, 2) }
 ```
 
 Timely wraps your existing code and times its execution. It is easy to drop into existing code
 when performance measurements are needed.
 
-However, no timing will actually occur until Timely knows what to do with its measurements.
-Timely makes no assumptions about what you want to do with your timing reports. This makes Timely
-itself very light and highly customisable. When you want to start reciving timing reports, you
-set a report function:
+However, no timing will actually occur until Timely knows what to do with its measurements. To
+remain light and highly customisable, Timely deliberately makes no assumptions about what you
+want to do with its timing data. To start receiving timing reports, you have to set a report
+function:
 
 ```swift
 Timely.setReportFunction { timer, seconds in
-    // With the examples above, `timer` will be "doSomething timer" and "calculation timer".
+    // With the examples above, `timer` will be "Timer 1" and "Timer 2".
     print("Timer with name \(timer) took \(seconds) seconds.")
 }
 ```
@@ -42,8 +42,9 @@ Timely will then simply execute the code blocks it is passed without any timing 
 it did before it was provided a report function). If you want to start timing again, simply pass
 another report function.
 
-There might be times when you'll have already set up Timely, but want to use a different
-reporting mechanism for particular timers. This can be done with an overload of the time method:
+There might be times when you have already set up Timely's report function, but want to use a
+different reporting mechanism for a particular timer. This can be done with an overload of the
+time method that applies a custom report function to that timer only:
 
 ```swift
 Timely.time("Timer", withReportFunction: CUSTOM_REPORT_FUNCTION) { doSomething() }
