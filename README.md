@@ -7,7 +7,7 @@ A tiny timing library for Swift. Timely allows you to easily time the execution 
 ```swift
 Timely.time("Timer 1") { doSomething() }
 
-let answer: Int = Timely.time("Timer 2") { calculateSomethingWithInts(1, 2) }
+let answer: String = Timely.time("Timer 2") { returnsAString("A", "B") }
 ```
 
 Timely wraps your existing code and times its execution. It is easy to drop into existing code
